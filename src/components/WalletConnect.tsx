@@ -2,20 +2,20 @@ import React, { useEffect } from 'react'
 import { useAccount, useConnect, useDisconnect } from 'wagmi'
 
 const WalletConnect: React.FC = () => {
-  // Detect MiniPay environment via injected flag or URL param
-  const simulateMiniPay = typeof window !== 'undefined' && window.location.search.includes('minipay')
-  const isMiniPay = simulateMiniPay || (typeof window !== 'undefined' && (window as any).ethereum?.isMiniPay)
+  // Only run inside the MiniPay app
+  const isMiniPay =
+    typeof window !== 'undefined' && (window as any).ethereum?.isMiniPay
 
   const { address, isConnected } = useAccount()
-  const { connectors, connect, isLoading, pendingConnector } = useConnect()
+  const { connectors, connect } = useConnect()
   const { disconnect } = useDisconnect()
 
-  // Auto-connect in MiniPay
+  // Auto-connect inside MiniPay
   useEffect(() => {
-    if (isMiniPay && connectors.length > 0) {
+    if (isMiniPay && connectors.length > 0 && !isConnected) {
       connect({ connector: connectors[0] })
     }
-  }, [isMiniPay, connectors, connect])
+  }, [isMiniPay, connectors, connect, isConnected])
 
   // Connected state
   if (isConnected) {
@@ -27,28 +27,8 @@ const WalletConnect: React.FC = () => {
     )
   }
 
-  // MiniPay flow: show loading state
-  if (isMiniPay) {
-    return <p>Connecting to MiniPay Wallet...</p>
-  }
-
-  // Default: render all connectors
-  return (
-    <div>
-      {connectors.map((connector) => (
-        <button
-          key={connector.id}
-          onClick={() => connect({ connector })}
-          disabled={!connector.ready || (isLoading && pendingConnector?.id === connector.id)}
-        >
-          {isLoading && pendingConnector?.id === connector.id
-            ? `Connecting to ${connector.name}...`
-            : `Connect with ${connector.name}`}
-        </button>
-      ))}
-      {connectors.length === 0 && <p>No compatible wallets found</p>}
-    </div>
-  )
+  // Default while (auto-)connecting
+  return <p>Connecting to MiniPay Wallet...</p>
 }
 
 export default WalletConnect 
