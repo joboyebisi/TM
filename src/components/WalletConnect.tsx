@@ -43,7 +43,10 @@ const WalletConnect: React.FC = () => {
   if (isMobile) {
     // On mobile (outside MiniPay), show the button to launch MiniPay via deep link
     return (
-      <button onClick={openInMiniPay}>
+      <button onClick={() => {
+        console.log('Connect with MiniPay button clicked!');
+        openInMiniPay();
+      }}>
         Connect with MiniPay Wallet
       </button>
     )

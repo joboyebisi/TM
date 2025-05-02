@@ -9,6 +9,8 @@ export function openInMiniPay() {
   const encodedUrl = encodeURIComponent(dappUrl)
   const deepLink   = `minipay://dapp?url=${encodedUrl}`
 
+  console.log('Attempting to navigate to deep link:', deepLink);
+
   // Attempt to navigate to the deep link
   window.location.href = deepLink
 } 
