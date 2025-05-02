@@ -5,7 +5,7 @@ import { celoAlfajores } from 'viem/chains'
 const celoConnector = injected({
   target: {
     id: 'celo',
-    name: 'Celo Wallet',
+    name: 'MiniPay Wallet',
     // provider function that returns the Celo provider injected by Celo Extension or MiniPay
     provider: () => (window as any).celo?.default ?? (window as any).celo,
   },
